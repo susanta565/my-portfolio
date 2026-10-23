@@ -69,7 +69,7 @@ export default function BackgroundCanvas() {
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   }, []);
 
-  // Update canvas resolution on resize
+  // Update canvas resolution on resize with mobile address-bar stabilization
   const updateCanvasDimensions = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -78,7 +78,11 @@ export default function BackgroundCanvas() {
     const newWidth = Math.round(window.innerWidth * dpr);
     const newHeight = Math.round(window.innerHeight * dpr);
 
-    if (canvas.width !== newWidth || canvas.height !== newHeight) {
+    const widthDiff = Math.abs((canvas.width || 0) - newWidth);
+    const heightDiff = Math.abs((canvas.height || 0) - newHeight);
+
+    // Prevent jittery canvas rebuilds when mobile browser hides/shows address bar
+    if (widthDiff > 0 || heightDiff > 120 || !canvas.width) {
       canvas.width = newWidth;
       canvas.height = newHeight;
       needsRedrawRef.current = true;
@@ -176,6 +180,7 @@ export default function BackgroundCanvas() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
 
     updateCanvasDimensions();
@@ -210,6 +215,7 @@ export default function BackgroundCanvas() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchmove', handleScroll);
       window.removeEventListener('resize', handleResize);
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
@@ -227,7 +233,8 @@ export default function BackgroundCanvas() {
           top: 0,
           left: 0,
           width: '100vw',
-          height: '100vh',
+          height: '100dvh',
+          minHeight: '100vh',
           display: 'block',
           pointerEvents: 'none',
           zIndex: 0,
@@ -241,10 +248,11 @@ export default function BackgroundCanvas() {
           top: 0,
           left: 0,
           width: '100vw',
-          height: '100vh',
+          height: '100dvh',
+          minHeight: '100vh',
           pointerEvents: 'none',
           zIndex: 1,
-          background: 'radial-gradient(circle at 50% 50%, rgba(6,3,2,0.1) 0%, rgba(6,3,2,0.7) 80%, rgba(6,3,2,0.95) 100%)',
+          background: 'radial-gradient(circle at 50% 50%, rgba(6,3,2,0.15) 0%, rgba(6,3,2,0.7) 80%, rgba(6,3,2,0.95) 100%)',
         }}
       />
 

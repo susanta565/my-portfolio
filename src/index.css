@@ -11,14 +11,20 @@ html {
   scroll-behavior: smooth;
   background-color: #060302;
   color: #ffffff;
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #060302;
   overflow-x: hidden;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
 }
 
 /* Scrollbar */
@@ -921,7 +927,7 @@ body {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+   Responsive Breakpoints & Mobile Optimization
    ========================================================================== */
 @media (max-width: 1100px) {
   .hero-section,
@@ -947,26 +953,291 @@ body {
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 24px 18px 20px 18px;
+    min-height: 100dvh;
+  }
+
+  .hero-backdrop-title {
+    font-size: clamp(48px, 15vw, 110px);
+    top: 15%;
+    width: 100%;
+  }
+
   .hero-content-grid {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 28px;
+    margin-top: 14vh;
+    padding-bottom: 12px;
+  }
+
+  .hero-left {
+    max-width: 100%;
+  }
+
+  .hero-greeting {
+    font-size: 28px;
+  }
+
+  .hero-name {
+    font-size: clamp(38px, 11vw, 56px);
+    line-height: 0.94;
+    word-break: break-word;
+  }
+
+  .hero-role {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .hero-bio {
+    font-size: 12.5px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    max-width: 100%;
   }
 
   .hero-right {
-    align-items: flex-start;
+    align-items: stretch;
+    width: 100%;
+    gap: 18px;
   }
 
+  .tagline-box {
+    max-width: 100%;
+  }
+
+  /* Sleek mobile dashboard-style stats */
   .stats-stack {
-    text-align: left;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+    background: rgba(18, 10, 8, 0.75);
+    border: 1px solid rgba(229, 28, 35, 0.25);
+    border-radius: 12px;
+    padding: 14px 10px;
+    backdrop-filter: blur(10px);
+    text-align: center;
   }
 
   .stat-item {
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 8.5px;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  /* Projects Section Mobile */
+  .projects-section,
+  .skills-process-section,
+  .contact-section {
+    padding: 56px 18px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .section-line {
+    display: none;
   }
 
   .projects-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
+  }
+
+  .project-card {
+    border-radius: 10px;
+  }
+
+  .project-info {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .project-title {
+    font-size: 13px;
+  }
+
+  /* Skills & Process Mobile */
+  .col-heading {
+    margin-bottom: 20px;
+  }
+
+  .skills-tags-wrap {
+    gap: 8px;
+  }
+
+  .skill-pill {
+    padding: 7px 11px;
+    font-size: 9.5px;
+    border-radius: 6px;
+  }
+
+  .timeline-step {
+    gap: 12px;
+  }
+
+  .step-num {
+    font-size: 10px;
+    width: 16px;
+  }
+
+  .step-icon-circle {
+    width: 26px;
+    height: 26px;
+  }
+
+  .step-title {
+    font-size: 11.5px;
+  }
+
+  .step-desc {
+    font-size: 11px;
+  }
+
+  .quote-card-inner {
+    padding: 28px 18px;
+  }
+
+  .quote-mark {
+    font-size: 44px;
+    margin-bottom: 8px;
+  }
+
+  .quote-text {
+    font-size: clamp(17px, 5vw, 21px);
+    line-height: 1.4;
+    margin-bottom: 18px;
+  }
+
+  .quote-signature {
+    font-size: 36px;
+    margin-bottom: 18px;
+  }
+
+  /* Contact Section Mobile */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-bottom: 28px;
+  }
+
+  .contact-heading {
+    font-size: clamp(38px, 11vw, 54px);
+  }
+
+  .contact-subtext {
+    font-size: 12.5px;
+    margin-bottom: 20px;
+  }
+
+  .contact-cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+  }
+
+  .contact-details-col {
+    gap: 10px;
+  }
+
+  .contact-row {
+    padding: 10px 14px;
+    background: rgba(18, 10, 8, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+
+  .contact-value {
+    font-size: 12px;
+    word-break: break-all;
+  }
+
+  .contact-mockup-col {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .mockup-frame {
+    max-width: 100%;
+  }
+
+  /* Creator Banner Mobile */
+  .portfolio-creator-banner {
+    margin: 28px 0 16px 0;
+  }
+
+  .creator-badge-inner {
+    padding: 10px 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .creator-highlight-name {
+    font-size: 20px;
+  }
+
+  .creator-label {
+    font-size: 9.5px;
+  }
+
+  /* Subfooter Mobile */
+  .subfooter {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding-top: 18px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-section {
+    padding: 18px 14px 16px 14px;
+  }
+
+  .projects-section,
+  .skills-process-section,
+  .contact-section {
+    padding: 44px 14px;
+  }
+
+  .hero-name {
+    font-size: clamp(32px, 10vw, 44px);
+  }
+
+  .stats-stack {
+    padding: 12px 6px;
+    gap: 6px;
+  }
+
+  .stat-number {
+    font-size: 28px;
+  }
+
+  .stat-label {
+    font-size: 8px;
   }
 }
