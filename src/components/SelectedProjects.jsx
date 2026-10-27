@@ -4,39 +4,53 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 const projects = [
   {
     id: '01',
-    title: 'VELOCE BIKES',
-    category: 'E-COMMERCE WEBSITE',
-    image: '/assets/project-veloce.jpg',
-    link: '#',
+    title: 'PAHADI DHABA',
+    category: 'DHABA & CATERING SERVICES',
+    image: '/assets/project-pahadi.jpg',
+    link: 'https://pahadidhaba.com/',
   },
   {
     id: '02',
-    title: 'WOODCRAFT',
-    category: 'FURNITURE WEBSITE',
-    image: '/assets/project-woodcraft.jpg',
-    link: '#',
+    title: 'BRIO KIDS',
+    category: 'SPECIAL EDUCATION & CARE',
+    image: '/assets/project-briokids.webp',
+    link: 'https://brio-kids.com',
   },
   {
     id: '03',
-    title: 'URBANIC',
-    category: 'FASHION MAGAZINE',
-    image: '/assets/project-urbanic.jpg',
-    link: '#',
+    title: '3D INTERACTIVE PORTFOLIO',
+    category: 'CREATIVE WEB DESIGN & 3D',
+    image: '/assets/project-portfolio.jpg',
+    link: 'https://susanta565-susanta-portfolio.vercel.app/',
+  },
+  {
+    id: '04',
+    title: 'CITY CHANDAN JEWELLERS',
+    category: 'LUXURY JEWELLERY STORE',
+    image: '/assets/project-citychandan.png',
+    link: 'https://citychandanjewellers.com/',
+  },
+  {
+    id: '05',
+    title: 'DIGITAL MARKETING & GROWTH',
+    category: 'META ADS • GOOGLE ADS • SEO STRATEGY',
+    image: '/assets/project-marketing.svg',
+    link: '#contact',
   },
 ];
 
 export default function SelectedProjects() {
   return (
-    <section className="projects-section">
+    <section className="projects-section" id="projects">
       {/* Section Header */}
       <div className="section-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <h2 className="section-title">SELECTED PROJECTS</h2>
-          <span className="section-badge">20+ PROJECTS</span>
+          <span className="section-badge">5 PROJECTS</span>
         </div>
         <div className="section-line" />
-        <a href="#all-projects" className="section-link">
-          <span>VIEW ALL 20+ PROJECTS</span>
+        <a href="#projects" className="section-link">
+          <span>EXPLORE ALL 5 PROJECTS</span>
           <ArrowRight size={15} />
         </a>
       </div>
@@ -44,7 +58,13 @@ export default function SelectedProjects() {
       {/* Projects Grid */}
       <div className="projects-grid">
         {projects.map((project) => (
-          <div key={project.id} className="project-card">
+          <a
+            key={project.id}
+            href={project.link}
+            target={project.link.startsWith('http') ? '_blank' : '_self'}
+            rel={project.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+            className="project-card"
+          >
             <div className="project-image-wrapper">
               <img
                 src={project.image}
@@ -54,7 +74,7 @@ export default function SelectedProjects() {
               />
               <div className="project-overlay">
                 <span className="project-view-btn">
-                  Explore <ArrowUpRight size={14} />
+                  Visit Live Site <ArrowUpRight size={14} />
                 </span>
               </div>
             </div>
@@ -69,7 +89,7 @@ export default function SelectedProjects() {
                 <ArrowRight size={16} />
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>

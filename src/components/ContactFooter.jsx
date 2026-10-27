@@ -3,7 +3,7 @@ import { Mail, Globe, Phone, MapPin, ArrowRight } from 'lucide-react';
 
 export default function ContactFooter() {
   return (
-    <footer className="contact-section">
+    <footer className="contact-section" id="contact">
       <div className="contact-grid">
         {/* Left Column: CTA & Info */}
         <div className="contact-left">

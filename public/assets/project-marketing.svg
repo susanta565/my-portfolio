@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140806" />
+      <stop offset="50%" stop-color="#0a0403" />
+      <stop offset="100%" stop-color="#1b0a08" />
+    </linearGradient>
+    <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff4d4f" />
+      <stop offset="50%" stop-color="#e51c23" />
+      <stop offset="100%" stop-color="#ff7875" />
+    </linearGradient>
+    <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e51c23" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#e51c23" stop-opacity="0.0" />
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#e51c23" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#e51c23" stop-opacity="0" />
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#e51c23" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="500" fill="url(#bgGrad)" />
+  <rect width="800" height="500" fill="url(#glow)" />
+
+  <!-- Subtle grid pattern -->
+  <g stroke="rgba(255, 255, 255, 0.05)" stroke-width="1">
+    <line x1="80" y1="60" x2="720" y2="60" />
+    <line x1="80" y1="140" x2="720" y2="140" />
+    <line x1="80" y1="220" x2="720" y2="220" />
+    <line x1="80" y1="300" x2="720" y2="300" />
+    <line x1="80" y1="380" x2="720" y2="380" />
+    
+    <line x1="80" y1="60" x2="80" y2="380" />
+    <line x1="240" y1="60" x2="240" y2="380" />
+    <line x1="400" y1="60" x2="400" y2="380" />
+    <line x1="560" y1="60" x2="560" y2="380" />
+    <line x1="720" y1="60" x2="720" y2="380" />
+  </g>
+
+  <!-- Growth Area Fill -->
+  <path d="M 80 340 Q 200 320, 300 280 T 500 180 T 720 100 L 720 380 L 80 380 Z" fill="url(#areaGrad)" />
+
+  <!-- Growth Curve Line -->
+  <path d="M 80 340 Q 200 320, 300 280 T 500 180 T 720 100" fill="none" stroke="url(#curveGrad)" stroke-width="4" filter="url(#shadow)" />
+
+  <!-- Data Nodes -->
+  <circle cx="80" cy="340" r="5" fill="#fff" stroke="#e51c23" stroke-width="3" />
+  <circle cx="300" cy="280" r="5" fill="#fff" stroke="#e51c23" stroke-width="3" />
+  <circle cx="500" cy="180" r="6" fill="#fff" stroke="#e51c23" stroke-width="3" />
+  <circle cx="720" cy="100" r="8" fill="#fff" stroke="#e51c23" stroke-width="4" filter="url(#shadow)" />
+
+  <!-- Floating Stats Card -->
+  <g transform="translate(480, 70)" filter="url(#shadow)">
+    <rect width="210" height="85" rx="10" fill="rgba(24, 10, 8, 0.9)" stroke="rgba(229, 28, 35, 0.5)" stroke-width="1.5" />
+    <text x="20" y="32" font-family="'Space Grotesk', sans-serif" font-size="11" font-weight="700" letter-spacing="1.5" fill="#e51c23">PERFORMANCE ROI</text>
+    <text x="20" y="68" font-family="'Bebas Neue', sans-serif" font-size="36" fill="#ffffff" letter-spacing="1">+380%</text>
+    <text x="120" y="66" font-family="'Space Grotesk', sans-serif" font-size="11" font-weight="600" fill="#4ade80">▲ GROWTH</text>
+  </g>
+
+  <!-- Pill Badges -->
+  <g transform="translate(80, 90)">
+    <rect width="120" height="30" rx="15" fill="rgba(229, 28, 35, 0.15)" stroke="rgba(229, 28, 35, 0.4)" />
+    <text x="60" y="20" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#ff7875" text-anchor="middle">META ADS</text>
+  </g>
+
+  <g transform="translate(210, 90)">
+    <rect width="130" height="30" rx="15" fill="rgba(229, 28, 35, 0.15)" stroke="rgba(229, 28, 35, 0.4)" />
+    <text x="65" y="20" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#ff7875" text-anchor="middle">GOOGLE ADS</text>
+  </g>
+
+  <g transform="translate(80, 130)">
+    <rect width="150" height="30" rx="15" fill="rgba(229, 28, 35, 0.15)" stroke="rgba(229, 28, 35, 0.4)" />
+    <text x="75" y="20" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="700" letter-spacing="1" fill="#ff7875" text-anchor="middle">SEO &amp; ANALYTICS</text>
+  </g>
+
+  <!-- Bottom Title Overlay -->
+  <text x="80" y="430" font-family="'Bebas Neue', sans-serif" font-size="34" letter-spacing="2" fill="#ffffff">DIGITAL MARKETING &amp; GROWTH CAMPAIGNS</text>
+  <text x="80" y="455" font-family="'Space Grotesk', sans-serif" font-size="12" letter-spacing="1.5" fill="rgba(255, 255, 255, 0.6)">TARGETED ADS • HIGH CONVERSION FUNNELS • ORGANIC REACH</text>
+</svg>

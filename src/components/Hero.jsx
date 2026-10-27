@@ -7,7 +7,7 @@ export default function Hero() {
       {/* Top Navbar */}
       <header className="hero-header">
         <div className="hero-brand">
-          <span className="brand-primary">WEB DESIGNER</span>
+          <span className="brand-primary">WEB DESIGNER &amp; DIGITAL MARKETER</span>
           <span className="brand-secondary">DIGITAL CREATOR</span>
         </div>
         <div className="hero-status">
@@ -30,12 +30,11 @@ export default function Hero() {
             SUSANTA<br />KUMAR BADATYA
           </h1>
           <h2 className="hero-role">
-            WEB DESIGNER
+            WEB DESIGNER &amp; DIGITAL MARKETING
           </h2>
           <p className="hero-bio">
-            I design and build stylish, user-focused web experiences that combine
-            creativity with strategy. Passionate about clean design, smooth
-            interactions, and details that make a difference.
+            I design and build stylish, user-focused web experiences and high-converting
+            digital marketing strategies that combine creativity with data-driven results.
           </p>
           <div className="hero-badge">
             <Globe size={14} className="badge-icon" />
@@ -54,19 +53,19 @@ export default function Hero() {
 
           <div className="stats-stack">
             <div className="stat-item">
-              <span className="stat-number">2+</span>
+              <span className="stat-number">1</span>
               <span className="stat-label">
-                YEARS<br />EXPERIENCE
+                YEAR EXP. IN<br />DIGITAL MARKETING
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">20+</span>
+              <span className="stat-number">5</span>
               <span className="stat-label">
                 PROJECTS<br />COMPLETED
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">15+</span>
+              <span className="stat-number">10+</span>
               <span className="stat-label">
                 HAPPY<br />CLIENTS
               </span>

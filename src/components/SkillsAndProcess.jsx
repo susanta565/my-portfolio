@@ -2,18 +2,18 @@ import React from 'react';
 import { Search, Lightbulb, PenLine, Code2, Send } from 'lucide-react';
 
 const skills = [
+  'DIGITAL MARKETING',
   'WEBSITE DESIGN',
   'PORTFOLIO DESIGN',
   'WEB APPS DESIGN',
   'LOGO DESIGN',
-  'THUMBNAIL CREATION',
   'GOOGLE ADS',
   'META ADS',
   'SOCIAL MEDIA MARKETING',
+  'SEO BASICS',
   'GRAPHIC DESIGNING',
   'CANVA',
   'WEBFLOW',
-  'SEO BASICS',
 ];
 
 const processSteps = [
