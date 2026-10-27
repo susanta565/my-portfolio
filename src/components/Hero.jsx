@@ -65,7 +65,7 @@ export default function Hero() {
               </span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">10+</span>
+              <span className="stat-number">5</span>
               <span className="stat-label">
                 HAPPY<br />CLIENTS
               </span>
