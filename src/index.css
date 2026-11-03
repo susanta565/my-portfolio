@@ -124,10 +124,10 @@ body {
   50% { opacity: 0.5; transform: scale(0.85); }
 }
 
-/* Massive Backdrop Title */
+/* Massive Backdrop Title (Positioned in the back of the head) */
 .hero-backdrop-title {
   position: absolute;
-  top: 18%;
+  top: 36%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: 'Bebas Neue', sans-serif;
@@ -139,8 +139,28 @@ body {
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
-  text-shadow: 0 0 40px rgba(201, 24, 32, 0.35);
+  text-shadow: 0 0 45px rgba(201, 24, 32, 0.4);
   user-select: none;
+}
+
+/* Head Cutout Layer (In front of PORTFOLIO title, behind bio & stats) */
+.hero-cutout-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.hero-head-cutout {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
 }
 
 /* Hero Content Grid */
@@ -990,9 +1010,10 @@ body {
   }
 
   .hero-backdrop-title {
-    font-size: clamp(48px, 15vw, 110px);
-    top: 15%;
+    font-size: clamp(56px, 19vw, 92px);
+    top: 16%;
     width: 100%;
+    letter-spacing: 0.08em;
   }
 
   .hero-content-grid {
