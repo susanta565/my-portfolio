@@ -3,6 +3,7 @@ import BackgroundCanvas from './components/BackgroundCanvas';
 import Hero from './components/Hero';
 import SelectedProjects from './components/SelectedProjects';
 import SkillsAndProcess from './components/SkillsAndProcess';
+import Testimonials from './components/Testimonials';
 import ContactFooter from './components/ContactFooter';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Hero />
         <SelectedProjects />
         <SkillsAndProcess />
+        <Testimonials />
         <ContactFooter />
       </div>
     </div>

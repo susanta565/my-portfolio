@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 const TOTAL_FRAMES = 333;
 const LERP_FACTOR = 0.12;
 
-// Shared cache across remounts
+// Shared cache across component remounts
 const imageCache = new Array(TOTAL_FRAMES);
 const loadedFlags = new Uint8Array(TOTAL_FRAMES);
 let isPreloadStarted = false;
@@ -22,9 +22,10 @@ export default function BackgroundCanvas() {
   const targetFrameRef = useRef(0);
   const lastRenderedImgRef = useRef(null);
   const needsRedrawRef = useRef(true);
+  const isLoopRunningRef = useRef(false);
   const rafIdRef = useRef(null);
 
-  // Find nearest loaded frame to prevent any flicker
+  // Find nearest loaded frame to prevent any flicker during scroll
   const getNearestLoadedImage = useCallback((targetIndex) => {
     if (loadedFlags[targetIndex] && imageCache[targetIndex]) {
       return imageCache[targetIndex];
@@ -42,20 +43,24 @@ export default function BackgroundCanvas() {
     return null;
   }, []);
 
-  // Direct canvas drawing
+  // Direct, low-latency canvas drawing with hardware acceleration
   const drawImageToCanvas = useCallback((img) => {
     const canvas = canvasRef.current;
     if (!canvas || !img || !img.complete || img.naturalWidth === 0) return;
 
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     if (!ctx) return;
 
     const width = canvas.width;
     const height = canvas.height;
 
-    // Fill canvas with deep black/amber background
+    // Fill canvas background
     ctx.fillStyle = '#060302';
     ctx.fillRect(0, 0, width, height);
+
+    // Fast image smoothing configuration
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = window.innerWidth < 768 ? 'low' : 'medium';
 
     // Cover scale calculation
     const imgWidth = img.naturalWidth;
@@ -63,33 +68,37 @@ export default function BackgroundCanvas() {
     const scale = Math.max(width / imgWidth, height / imgHeight);
     const drawWidth = imgWidth * scale;
     const drawHeight = imgHeight * scale;
-    const offsetX = (width - drawWidth) / 2;
-    const offsetY = (height - drawHeight) / 2;
+    const offsetX = (width - drawWidth) * 0.5;
+    const offsetY = (height - drawHeight) * 0.5;
 
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
   }, []);
 
-  // Update canvas resolution on resize with mobile address-bar stabilization
+  // Update canvas resolution with mobile-optimized DPR and address-bar stabilization
   const updateCanvasDimensions = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const isMobile = window.innerWidth <= 768;
+    const dpr = isMobile
+      ? Math.min(window.devicePixelRatio || 1, 1.25)
+      : Math.min(window.devicePixelRatio || 1, 1.75);
+
     const newWidth = Math.round(window.innerWidth * dpr);
     const newHeight = Math.round(window.innerHeight * dpr);
 
     const widthDiff = Math.abs((canvas.width || 0) - newWidth);
     const heightDiff = Math.abs((canvas.height || 0) - newHeight);
 
-    // Prevent jittery canvas rebuilds when mobile browser hides/shows address bar
-    if (widthDiff > 0 || heightDiff > 120 || !canvas.width) {
+    // Prevent jittery canvas rebuilds when mobile browser address bar shows/hides
+    if (widthDiff > 0 || heightDiff > 100 || !canvas.width) {
       canvas.width = newWidth;
       canvas.height = newHeight;
       needsRedrawRef.current = true;
     }
   }, []);
 
-  // Progressive preloader
+  // Progressive background preloader
   useEffect(() => {
     let mounted = true;
 
@@ -136,20 +145,20 @@ export default function BackgroundCanvas() {
     // Load initial frame instantly
     preloadImage(0);
 
-    // Preload remaining frames in background
+    // Concurrently buffer remainder in small chunks to avoid network congestion
     if (!isPreloadStarted) {
       isPreloadStarted = true;
       let currentIndex = 1;
-      const CONCURRENCY = 12;
+      const BATCH_SIZE = 8;
 
       const scheduleNext = () => {
-        while (currentIndex < TOTAL_FRAMES) {
-          const idx = currentIndex++;
-          preloadImage(idx);
-          if (idx % CONCURRENCY === 0) {
-            setTimeout(scheduleNext, 25);
-            return;
-          }
+        let loadedInBatch = 0;
+        while (currentIndex < TOTAL_FRAMES && loadedInBatch < BATCH_SIZE) {
+          preloadImage(currentIndex++);
+          loadedInBatch++;
+        }
+        if (currentIndex < TOTAL_FRAMES) {
+          setTimeout(scheduleNext, 35);
         }
       };
 
@@ -161,8 +170,46 @@ export default function BackgroundCanvas() {
     };
   }, []);
 
-  // Scroll tracking and LERP loop across whole page
+  // Performance-optimized LERP loop that sleeps when idle
   useEffect(() => {
+    const wakeUpRenderLoop = () => {
+      if (isLoopRunningRef.current) return;
+      isLoopRunningRef.current = true;
+
+      const renderStep = () => {
+        const diff = targetFrameRef.current - currentFrameRef.current;
+
+        // Smooth convergence
+        if (Math.abs(diff) > 0.005) {
+          currentFrameRef.current += diff * LERP_FACTOR;
+        } else {
+          currentFrameRef.current = targetFrameRef.current;
+        }
+
+        const targetIdx = Math.min(
+          TOTAL_FRAMES - 1,
+          Math.max(0, Math.round(currentFrameRef.current))
+        );
+
+        const bestImg = getNearestLoadedImage(targetIdx);
+
+        if (bestImg && (bestImg !== lastRenderedImgRef.current || needsRedrawRef.current)) {
+          drawImageToCanvas(bestImg);
+          lastRenderedImgRef.current = bestImg;
+          needsRedrawRef.current = false;
+        }
+
+        // Keep loop alive while moving or needing redraw; stop when settled
+        if (Math.abs(diff) > 0.005 || needsRedrawRef.current) {
+          rafIdRef.current = requestAnimationFrame(renderStep);
+        } else {
+          isLoopRunningRef.current = false;
+        }
+      };
+
+      rafIdRef.current = requestAnimationFrame(renderStep);
+    };
+
     const handleScroll = () => {
       const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
       const totalScrollable = Math.max(
@@ -172,60 +219,37 @@ export default function BackgroundCanvas() {
 
       const progress = Math.min(1, Math.max(0, scrollY / totalScrollable));
       targetFrameRef.current = progress * (TOTAL_FRAMES - 1);
+
+      wakeUpRenderLoop();
     };
 
     const handleResize = () => {
       updateCanvasDimensions();
       handleScroll();
+      wakeUpRenderLoop();
     };
 
+    // Passive listeners for native 60fps/120fps touch & mouse wheel scrolling
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('touchmove', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
     updateCanvasDimensions();
     handleScroll();
-
-    // 60fps/120fps LERP loop
-    const renderLoop = () => {
-      const diff = targetFrameRef.current - currentFrameRef.current;
-      if (Math.abs(diff) > 0.001) {
-        currentFrameRef.current += diff * LERP_FACTOR;
-      } else {
-        currentFrameRef.current = targetFrameRef.current;
-      }
-
-      const targetIdx = Math.min(
-        TOTAL_FRAMES - 1,
-        Math.max(0, Math.round(currentFrameRef.current))
-      );
-
-      const bestImg = getNearestLoadedImage(targetIdx);
-
-      if (bestImg && (bestImg !== lastRenderedImgRef.current || needsRedrawRef.current)) {
-        drawImageToCanvas(bestImg);
-        lastRenderedImgRef.current = bestImg;
-        needsRedrawRef.current = false;
-      }
-
-      rafIdRef.current = requestAnimationFrame(renderLoop);
-    };
-
-    rafIdRef.current = requestAnimationFrame(renderLoop);
+    wakeUpRenderLoop();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchmove', handleScroll);
       window.removeEventListener('resize', handleResize);
       if (rafIdRef.current) {
         cancelAnimationFrame(rafIdRef.current);
       }
+      isLoopRunningRef.current = false;
     };
   }, [updateCanvasDimensions, getNearestLoadedImage, drawImageToCanvas]);
 
   return (
     <>
-      {/* Background Canvas Layer */}
+      {/* 3D Hardware-Accelerated Background Canvas */}
       <canvas
         ref={canvasRef}
         style={{
@@ -238,6 +262,8 @@ export default function BackgroundCanvas() {
           display: 'block',
           pointerEvents: 'none',
           zIndex: 0,
+          transform: 'translate3d(0, 0, 0)',
+          willChange: 'contents',
         }}
       />
 
@@ -252,11 +278,13 @@ export default function BackgroundCanvas() {
           minHeight: '100vh',
           pointerEvents: 'none',
           zIndex: 1,
-          background: 'radial-gradient(circle at 50% 50%, rgba(6,3,2,0.15) 0%, rgba(6,3,2,0.7) 80%, rgba(6,3,2,0.95) 100%)',
+          transform: 'translate3d(0, 0, 0)',
+          background:
+            'radial-gradient(circle at 50% 50%, rgba(6,3,2,0.15) 0%, rgba(6,3,2,0.7) 80%, rgba(6,3,2,0.95) 100%)',
         }}
       />
 
-      {/* Minimal subtle buffer indicator */}
+      {/* Subtle buffer indicator */}
       {!isFullyLoaded && (
         <div
           style={{
@@ -266,7 +294,7 @@ export default function BackgroundCanvas() {
             fontSize: '10px',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
-            color: 'rgba(255, 255, 255, 0.4)',
+            color: 'rgba(255, 255, 255, 0.45)',
             zIndex: 99,
             pointerEvents: 'none',
             fontVariantNumeric: 'tabular-nums',
