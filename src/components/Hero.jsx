@@ -16,18 +16,9 @@ export default function Hero() {
         </div>
       </header>
 
-      {/* Giant Background PORTFOLIO typography (Positioned behind head) */}
+      {/* Giant Background PORTFOLIO typography */}
       <div className="hero-backdrop-title" aria-hidden="true">
         PORTFOLIO
-      </div>
-
-      {/* Subject Head Cutout Layer (Positioned over PORTFOLIO, behind bio & stats) */}
-      <div className="hero-cutout-container" aria-hidden="true">
-        <img
-          src="/assets/susanta-cutout.png"
-          alt=""
-          className="hero-head-cutout"
-        />
       </div>
 
       {/* Hero Foreground Content Overlay */}
